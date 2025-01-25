@@ -40,7 +40,6 @@ main {
 .add-button {
   height: 8vh;
   width: 12vw;
-  margin-top: 6vh;
   font-size: 1.5rem;
   font-weight: bold;
   padding: 20px;
@@ -56,6 +55,7 @@ main {
   display: grid;
   align-items: center;
   grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  margin-top: 6vh;
   grid-auto-rows: minmax(200px, 350px);
 }
 
