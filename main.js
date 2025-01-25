@@ -8,38 +8,19 @@ const pages = document.querySelector("#pages");
 let readStatus = document.querySelector("#readStatus");
 let removeButton = document.querySelectorAll(".remove-button")
 let toggleReadButton = document.querySelectorAll(".toggleReadButton");
-let bookCounter = 0;
-let readCounter = 0;
+let book
+
 
 let myLibrary = [
-  {
-    name: "The Hobbit", 
-    author: "J.R.R",
-    page: 295,
-    readStatus: "Not Read"
-  },
-  {
-    name: "Diary of the Wimpy Kid", 
-    author: "Jeff Kinney",
-    page: 221,
-    readStatus: "Read"
-  }
 ];
 
 Book.prototype.toggleRead = function() {
-  toggleReadButton.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (button.textContent === "Not Read") {
-        button.textContent = "Read";  
-      } else if (button.textContent === "Read") {
-        button.textContent = "Not Read";
-      }
-    })   
-  })
+  if (this.readStatus === "Read") {
+    this.readStatus = "Not Read";
+  } else if (this.readStatus === "Not Read") {
+    this.readStatus = "Read";
+  }   
 }
-
-
-// addBookToLibrary()
 
 function Book(name, author, page, readStatus) {
   this.name = name;
@@ -49,9 +30,16 @@ function Book(name, author, page, readStatus) {
 }
 
 function addBookToLibrary(readstatus) {
-  const book = new Book(title.value, author.value, pages.value, readstatus);
+  container.textContent = "";
+
+  book = new Book(title.value, author.value, pages.value, readstatus);
+  
+  // console.log(Book.prototype.toggleRead());
   myLibrary.push(book);
+  
 }
+
+console.log(book)
 
 addButton.addEventListener('click', () => {
   dialog.showModal();
@@ -72,13 +60,18 @@ function displayBook() {
       buttonGroup.classList.add("button-group")
       toggleReadButton.classList.add("toggleReadButton");
       removeButton.classList.add("remove-button")
-      bookCard.setAttribute("id", bookCounter);
-
       paraName.textContent = `${myLibrary[i].name}`;
       paraAuthor.textContent = `${myLibrary[i].author}`;
       paraPage.textContent = `${myLibrary[i].page}`;
       toggleReadButton.textContent = `${myLibrary[i].readStatus}`;
       removeButton.textContent = `Remove`
+
+      bookCard.setAttribute("id", i);
+
+      toggleReadButton.addEventListener("click", () => {
+        myLibrary[i].toggleRead();
+        toggleReadButton.textContent = myLibrary[i].readStatus; 
+      })
 
       bookCard.appendChild(paraName);
       bookCard.appendChild(paraAuthor);
@@ -87,21 +80,16 @@ function displayBook() {
       buttonGroup.appendChild(removeButton);
 
       bookCard.appendChild(buttonGroup);
-
-      bookCounter++;
-      container.appendChild(bookCard);  
-  } 
+      container.appendChild(bookCard); 
+  }   
 
   toggleReadButton = document.querySelectorAll(".toggleReadButton");
   removeButton = document.querySelectorAll(".remove-button"); 
-  myLibrary = [];
   readStatus = document.querySelector("#readStatus");
-  Book.prototype.toggleRead();
 }
 
 
 displayBook()
- 
 submitButton.addEventListener("click", (event) => {
   if (
     title.checkValidity(),
@@ -128,13 +116,17 @@ function removeButtons() {
 
   removeButton.forEach((removeButtons) => {
     removeButtons.addEventListener("click", () => {
-      const parentID = removeButtons.parentElement.parentElement.id;
-      const parentElm = document.getElementById(`${parentID}`)
+      const parentID = Number(removeButtons.parentElement.parentElement.id);
+      const parentElm = document.getElementById(`${parentID}`);
 
-      parentElm.remove()
+
+      const newArr = myLibrary.filter((item, index) => {
+        return parentID !== index
+      })
+
+      parentElm.remove();
+      myLibrary = newArr;
     })
   })
 
 }
-
-removeButtons()
