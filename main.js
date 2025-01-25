@@ -6,8 +6,8 @@ const title = document.querySelector("#title");
 const author = document.querySelector("#author");
 const pages = document.querySelector("#pages");
 let readStatus = document.querySelector("#readStatus");
-let removeButton = undefined;
-let toggleReadButton = undefined;
+let removeButton = document.querySelectorAll(".remove-button")
+let toggleReadButton = document.querySelectorAll(".toggleReadButton");
 let bookCounter = 0;
 let readCounter = 0;
 
@@ -26,26 +26,18 @@ let myLibrary = [
   }
 ];
 
-
 Book.prototype.toggleRead = function() {
   toggleReadButton.forEach((button) => {
-
     button.addEventListener("click", () => {
-      if (this.readStatus = "Read") {
+      if (button.textContent === "Not Read") {
+        button.textContent = "Read";  
+      } else if (button.textContent === "Read") {
         button.textContent = "Not Read";
-        this.readStatus = "Not Read"
-        console.log("Worked")
-      } else if (this.readStatus = "Not Read") {
-        button.textContent = "Read";
-        this.readStatus = "Read";
-        console.log("Not worked") 
-      } else {
-        console.log("POO")
       }
-    })
+    })   
   })
-
 }
+
 
 // addBookToLibrary()
 
@@ -53,18 +45,11 @@ function Book(name, author, page, readStatus) {
   this.name = name;
   this.author = author;
   this.page = page;
-  this.readStatus = readStatus
+  this.readStatus = readStatus;
 }
 
-function addBookToLibrary() {
-  if (readStatus.checked === true) {
-    readStatus = "Read";
-  } else {
-    readStatus = "Not Read";
-  }
-
-  const book = new Book(title.value, author.value, pages.value, readStatus);
-  book.toggleRead();
+function addBookToLibrary(readstatus) {
+  const book = new Book(title.value, author.value, pages.value, readstatus);
   myLibrary.push(book);
 }
 
@@ -74,29 +59,44 @@ addButton.addEventListener('click', () => {
 
 function displayBook() {
 
-  for (let i = 0; i < myLibrary.length; i++) {    
+  for (let i = 0; i < myLibrary.length; i++) {  
       const bookCard = document.createElement("div");
+      const paraName = document.createElement("p");
+      const paraAuthor = document.createElement("p");
+      const paraPage = document.createElement("p");
+      const buttonGroup = document.createElement("div");
+      const toggleReadButton = document.createElement("button");
+      const removeButton = document.createElement("button");
 
       bookCard.classList.add("book-card");
+      buttonGroup.classList.add("button-group")
+      toggleReadButton.classList.add("toggleReadButton");
+      removeButton.classList.add("remove-button")
       bookCard.setAttribute("id", bookCounter);
-      bookCounter += 1;
-      bookCard.innerHTML = `
-            <p>${myLibrary[i].name}</p>
-            <p>${myLibrary[i].author}</p>
-            <p>${myLibrary[i].page} pages</p>
-            <div class="button-group">
-              <button class="toggleReadButton">${myLibrary[i].readStatus}</button>
-              <button class="remove-button">Remove</button>
-            </div>`;  
-  
-      
-      container.appendChild(bookCard); 
-  }
+
+      paraName.textContent = `${myLibrary[i].name}`;
+      paraAuthor.textContent = `${myLibrary[i].author}`;
+      paraPage.textContent = `${myLibrary[i].page}`;
+      toggleReadButton.textContent = `${myLibrary[i].readStatus}`;
+      removeButton.textContent = `Remove`
+
+      bookCard.appendChild(paraName);
+      bookCard.appendChild(paraAuthor);
+      bookCard.appendChild(paraPage); 
+      buttonGroup.appendChild(toggleReadButton);
+      buttonGroup.appendChild(removeButton);
+
+      bookCard.appendChild(buttonGroup);
+
+      bookCounter++;
+      container.appendChild(bookCard);  
+  } 
 
   toggleReadButton = document.querySelectorAll(".toggleReadButton");
-  removeButton = document.querySelectorAll(".remove-button");
+  removeButton = document.querySelectorAll(".remove-button"); 
   myLibrary = [];
-  readStatus = document.querySelector("#readStatus")
+  readStatus = document.querySelector("#readStatus");
+  Book.prototype.toggleRead();
 }
 
 
@@ -108,7 +108,11 @@ submitButton.addEventListener("click", (event) => {
     author.checkValidity(),
     pages.checkValidity()
   ) {
-    addBookToLibrary();
+    if (readStatus.checked === true) {
+      addBookToLibrary("Read");
+    } else if (readStatus.checked === false) {
+      addBookToLibrary("Not Read")
+    }
     displayBook();
     event.preventDefault()
     removeButtons();

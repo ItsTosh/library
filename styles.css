@@ -30,7 +30,6 @@ body, html {
 
 main {
   background-color: var(--grey);
-  height: 100vh;
   padding: 5vh;
 }
 
@@ -85,6 +84,14 @@ main {
   padding: 10px;
   font-size: 1.3rem;
   font-weight: bold;
+}
+
+button.active {
+  background-color: lightgreen;
+}
+
+button.inactive {
+  background-color: lightpink;
 }
 
 /* Modal Box */
